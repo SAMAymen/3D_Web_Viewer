@@ -154,9 +154,13 @@
             <label for="file-input" class="upload-label">Choose 3D Model</label>
             <p>or drag and drop your .glb/.gltf file here</p>
         </div>
-        <model-viewer id="preview" camera-controls auto-rotate exposure="1" shadow-intensity="1" shadow-softness="1"
-            camera-orbit="0deg 75deg 105%" min-camera-orbit="auto auto 5%"
-            max-camera-orbit="auto auto 900%"></model-viewer>
+
+        <!-- model-viewer with default model src -->
+        <model-viewer id="preview" src="https://modelviewer.dev/shared-assets/models/Astronaut.glb" camera-controls
+            auto-rotate exposure="1" shadow-intensity="1" shadow-softness="1" camera-orbit="0deg 75deg 105%"
+            min-camera-orbit="auto auto 5%" max-camera-orbit="auto auto 900%">
+        </model-viewer>
+
         <div class="controls">
             <div class="control-group">
                 <label for="exposure">Exposure:</label>
@@ -245,21 +249,25 @@
         });
 
         orbitControl.addEventListener('input', (e) => {
-            preview.cameraOrbit = `${e.target.value}deg 75deg ${zoomControl.value}%`;
+            preview.cameraOrbit = `${e.target.value}deg 75deg 105%`;
             updateIframeCode();
         });
 
         zoomControl.addEventListener('input', (e) => {
-            preview.cameraOrbit = `${orbitControl.value}deg 75deg ${e.target.value}%`;
+            preview.cameraOrbit = `0deg 75deg ${e.target.value}%`;
             updateIframeCode();
         });
 
         resetViewButton.addEventListener('click', () => {
+            preview.cameraOrbit = "0deg 75deg 105%";
+            exposureControl.value = 1;
             orbitControl.value = 0;
             zoomControl.value = 105;
-            exposureControl.value = 1;
-            preview.cameraOrbit = "0deg 75deg 105%";
-            preview.exposure = 1;
+            updateIframeCode();
+        });
+
+        // Default model is directly loaded in the src of model-viewer
+        window.addEventListener('DOMContentLoaded', () => {
             updateIframeCode();
         });
     </script>
